@@ -1,14 +1,25 @@
-"use server"
+"use server";
+import { submitSchema } from "@/schema/form";
 
-export async function formSubmit(prevState: string, formData: FormData) {
-  const name = formData.get("name") as string;
-  const email = formData.get("email") as string;
-  const message = formData.get("message") as string;
+export async function formSubmit(
+  prevState: { errors?: Record<string, string[]>; success?: string },
+  formData: FormData
+): Promise<{ errors?: Record<string, string[]>; success?: string }> {
+  // FormData から値を取り出す
+  const formObject = Object.fromEntries(formData.entries());
+
+  // Zod でバリデーション
+  const result = submitSchema.safeParse(formObject);
+
+  if (!result.success) {
+    return { errors: result.error.flatten().fieldErrors };
+  }
+
+  const { name, email, message } = result.data;
 
   console.log(prevState);
+  console.log("送信データ:", { name, email, message });
 
   // ここでバックエンドやDBに送信する処理を実装可能
-  console.log({ name, email, message });
-
-  return `送信しました: ${name} (${email}) - ${message}`;
+  return { success: `送信しました: ${name} (${email}) - ${message}` };
 }
