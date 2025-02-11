@@ -6,7 +6,6 @@ import { loginSchema } from "@/schema/form";
 import { getFormProps, getInputProps, useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { Box, Button, FormControl, Input, ui } from "@yamada-ui/react";
-import { useEffect } from "react";
 import { useFormState } from "react-dom";
 
 export function LoginForm() {
